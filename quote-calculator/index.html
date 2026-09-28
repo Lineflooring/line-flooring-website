@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quote Calculator — Line Flooring</title>
+<!--
+  ============================================================
+  COMO USAR:
+  1. Troque WHATSAPP_NUMBER abaixo pelo número real (DDI+DDD+número,
+     só dígitos. Ex: 14075551234).
+  2. Para colocar no site GoDaddy: adicione uma seção "HTML
+     personalizado" e cole TODO o conteúdo deste arquivo.
+  3. ATIVAÇÃO DO E-MAIL: depois de publicar, faça UM cálculo de teste
+     e abra a caixa de entrada de contact@lineflooringcontractor.com
+     para clicar no link de ativação do FormSubmit (olhe o spam).
+     Sem esse clique, os leads não chegam.
+  ============================================================
+-->
+<style>
+  :root{
+    --bg:#141210; --card:#1f1b17; --card2:#262019;
+    --amber:#e8a33d; --amber-d:#c98422;
+    --text:#f5efe6; --muted:#b8a98f; --line:#3a3129;
+    --green:#25d366; --radius:14px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:560px; margin:0 auto; padding:20px 16px 40px}
+  header{text-align:center; padding:18px 0 6px}
+  header .brand{font-size:13px; letter-spacing:3px; color:var(--amber); font-weight:700}
+  header h1{font-size:26px; margin:6px 0 4px}
+  header p{color:var(--muted); font-size:14px}
+  .step{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:18px; margin-top:16px}
+  .step h2{font-size:15px; margin-bottom:4px}
+  .step .hint{font-size:13px; color:var(--muted); margin-bottom:12px}
+  .svc{display:block; width:100%; text-align:left; background:var(--card2);
+    border:2px solid var(--line); border-radius:12px; padding:14px; margin-bottom:10px;
+    color:var(--text); cursor:pointer; transition:border-color .15s}
+  .svc:last-child{margin-bottom:0}
+  .svc.sel{border-color:var(--amber)}
+  .svc .t{font-weight:700; font-size:16px}
+  .svc .p{color:var(--amber); font-weight:700; font-size:15px; margin-top:2px}
+  .svc .d{font-size:13px; color:var(--muted); margin-top:2px}
+  .arearow{display:flex; gap:10px; align-items:center}
+  input[type=number], input[type=text], input[type=tel], input[type=email]{
+    width:100%; background:#100e0c; border:1px solid var(--line); color:var(--text);
+    border-radius:10px; padding:13px 12px; font-size:16px; outline:none}
+  input:focus{border-color:var(--amber)}
+  input[type=range]{width:100%; accent-color:var(--amber); margin-top:12px}
+  .rangelabels{display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-top:4px}
+  .addons{margin-top:16px; border-top:1px dashed var(--line); padding-top:12px}
+  .addons-title{font-size:14px; font-weight:700; margin-bottom:8px}
+  .addons-title span{color:var(--muted); font-weight:400; font-size:13px}
+  .addon{display:flex; gap:10px; align-items:flex-start; background:var(--card2);
+    border:1px solid var(--line); border-radius:10px; padding:12px; cursor:pointer}
+  .addon input{width:20px; height:20px; margin-top:2px; accent-color:var(--amber); flex-shrink:0}
+  .addon .aname{display:block; font-weight:700; font-size:15px}
+  .addon .adesc{display:block; font-size:13px; color:var(--muted)}
+  .addon + .addon{margin-top:8px}
+  .addon-sub{background:var(--card2); border:1px solid var(--line); border-top:none;
+    border-radius:0 0 10px 10px; margin:-8px 0 0; padding:10px 12px 12px}
+  .addon-sub .pick{display:inline-flex; align-items:center; gap:6px; font-size:14px; margin-right:14px; cursor:pointer}
+  .addon-sub .pick input{width:17px; height:17px; accent-color:var(--amber)}
+  .linrow{display:flex; align-items:center; gap:10px; margin-top:10px}
+  .linrow span{font-size:14px; color:var(--muted)}
+  .linrow input{max-width:130px}
+  .field{margin-bottom:12px}
+  .field label{display:block; font-size:13px; color:var(--muted); margin-bottom:5px}
+  .btn{display:block; width:100%; border:none; cursor:pointer; border-radius:12px;
+    padding:15px; font-size:17px; font-weight:800; margin-top:6px}
+  .btn-amber{background:var(--amber); color:#1a1408}
+  .btn-amber:active{background:var(--amber-d)}
+  .btn-wa{background:var(--green); color:#fff; text-decoration:none; text-align:center}
+  .btn-ghost{background:transparent; border:1px solid var(--line); color:var(--text); font-size:15px; font-weight:600}
+  #result{display:none}
+  .price-big{font-size:44px; font-weight:800; color:var(--amber); text-align:center; margin:8px 0 2px}
+  .price-sub{text-align:center; color:var(--muted); font-size:13px; margin-bottom:14px}
+  .bd{background:#100e0c; border-radius:10px; padding:12px 14px; font-size:14px; margin-bottom:14px}
+  .bd .row{display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px dashed var(--line)}
+  .bd .row:last-child{border-bottom:none}
+  .bd .row span:last-child{font-weight:700}
+  .ok{color:#7ee2a0; font-size:13px; margin-top:8px}
+  .badges{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:18px}
+  .badges span{font-size:12px; color:var(--muted); border:1px solid var(--line);
+    border-radius:20px; padding:5px 12px}
+  .fine{font-size:12px; color:var(--muted); text-align:center; margin-top:14px}
+  .err{color:#ff9d9d; font-size:13px; margin-top:8px; display:none}
+  .alt-wa{text-align:center; margin-top:12px; font-size:14px; color:var(--muted)}
+  .alt-wa a{color:var(--green); font-weight:700; text-decoration:none}
+  #wafloat{position:fixed; right:16px; bottom:16px; width:54px; height:54px;
+    background:var(--green); border-radius:50%; display:flex; align-items:center;
+    justify-content:center; box-shadow:0 4px 14px rgba(0,0,0,.35); z-index:999;
+    opacity:.92; transition:transform .15s, opacity .15s}
+  #wafloat:hover{opacity:1; transform:scale(1.06)}
+  #wafloat svg{width:30px; height:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">LINE FLOORING</div>
+    <h1>Instant quote calculator</h1>
+    <p>See your price right away — no strings attached.</p>
+  </header>
+
+  <!-- STEP 1 -->
+  <div class="step" id="step1">
+    <h2>1. What do you need?</h2>
+    <div class="hint">Tap an option.</div>
+    <button class="svc sel" data-svc="complete" type="button">
+      <div class="t">Full package — LVP</div>
+      <div class="d">LVP material + installation. Our most popular.</div>
+    </button>
+    <button class="svc" data-svc="install" type="button">
+      <div class="t">Labor only — LVP install</div>
+      <div class="d">Already have the LVP? We'll install it.</div>
+    </button>
+    <button class="svc" data-svc="epoxy" type="button">
+      <div class="t">Garage epoxy (flake)</div>
+      <div class="d">Material + installation. Showroom look for your garage.</div>
+    </button>
+    <button class="svc" data-svc="tile_labor" type="button">
+      <div class="t">Tile install 12x24 — labor only</div>
+      <div class="d">You buy the tile, we install it. The most common size.</div>
+    </button>
+    <button class="svc" data-svc="tile_full" type="button">
+      <div class="t">Porcelain tile 12x24 — full service</div>
+      <div class="d">Porcelain tile + installation. The most popular choice.</div>
+    </button>
+    <button class="svc" data-svc="tile_removal" type="button">
+      <div class="t">Tile removal</div>
+      <div class="d">Includes dumpster + debris removal.</div>
+    </button>
+    <div class="alt-wa">Don't see your service? <a id="watopbtn" href="#" target="_blank" rel="noopener">Chat on WhatsApp →</a></div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step" id="step2">
+    <h2>2. What's the square footage?</h2>
+    <div class="hint" id="areahint">Total area for the flooring (1,000 – 8,000 sq ft).</div>
+    <div class="arearow">
+      <input type="number" id="sqft" value="1000" min="1000" max="8000" step="10">
+    </div>
+    <input type="range" id="sqftrange" value="1000" min="1000" max="8000" step="50">
+    <div class="rangelabels"><span id="rmin">1,000</span><span>8,000 sq ft</span></div>
+    <div class="addons">
+      <div class="addons-title">Add-ons <span>(optional)</span></div>
+      <label class="addon">
+        <input type="checkbox" id="addon_carpet">
+        <span><span class="aname">Carpet removal</span><span class="adesc">We remove and dispose of the old carpet.</span></span>
+      </label>
+      <label class="addon">
+        <input type="checkbox" id="addon_base">
+        <span><span class="aname">Baseboards</span><span class="adesc">New baseboards installed.</span></span>
+      </label>
+      <div class="addon-sub" id="base_opts" style="display:none">
+        <label class="pick"><input type="radio" name="base_type" value="labor" checked> Labor only</label>
+        <label class="pick"><input type="radio" name="base_type" value="full"> Labor + material</label>
+        <div class="linrow"><span>Linear ft:</span><input type="number" id="base_lf" min="0" step="10" placeholder="0"></div>
+      </div>
+      <label class="addon">
+        <input type="checkbox" id="addon_shoe">
+        <span><span class="aname">Shoe molding / quarter round</span><span class="adesc">Installed along the baseboards.</span></span>
+      </label>
+      <div class="addon-sub" id="shoe_opts" style="display:none">
+        <label class="pick"><input type="radio" name="shoe_type" value="labor" checked> Labor only</label>
+        <label class="pick"><input type="radio" name="shoe_type" value="full"> Labor + material</label>
+        <div class="linrow"><span>Linear ft:</span><input type="number" id="shoe_lf" min="0" step="10" placeholder="0"></div>
+      </div>
+      <label class="addon">
+        <input type="checkbox" id="addon_stairs">
+        <span><span class="aname">Stairs</span><span class="adesc">Stairnose + vinyl + risers. Fixed labor up to 18 steps.</span></span>
+      </label>
+      <div class="addon-sub" id="stairs_opts" style="display:none">
+        <div class="linrow"><span>Steps (max 18):</span><input type="number" id="stairs_n" min="1" max="18" step="1" placeholder="0"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step" id="step3">
+    <h2>3. Where do we send your quote?</h2>
+    <div class="hint">Your price shows up instantly, right here.</div>
+    <div class="field">
+      <label for="fname">Your name *</label>
+      <input type="text" id="fname" placeholder="Ex: John" autocomplete="given-name">
+    </div>
+    <div class="field">
+      <label for="fphone">Your WhatsApp / phone *</label>
+      <input type="tel" id="fphone" placeholder="(407) 000-0000" autocomplete="tel">
+    </div>
+    <div class="field">
+      <label for="fzip">Property ZIP *</label>
+      <input type="text" id="fzip" placeholder="Ex: 34787" inputmode="numeric" maxlength="10">
+    </div>
+    <div class="field">
+      <label for="femail">Email (optional)</label>
+      <input type="email" id="femail" placeholder="you@email.com" autocomplete="email">
+    </div>
+    <div class="err" id="formerr">Please fill in your name, WhatsApp, and a valid 5-digit ZIP.</div>
+    <button class="btn btn-amber" id="calcbtn" type="button">See my quote →</button>
+  </div>
+
+  <!-- RESULT -->
+  <div class="step" id="result">
+    <h2 id="rservicename">Your estimated quote</h2>
+    <div class="price-big" id="rtotal">$0</div>
+    <div class="price-sub">estimated price · free measurement confirms the final price</div>
+    <div class="bd" id="rbreakdown"></div>
+    <div class="ok" id="rdelivery"></div>
+    <a class="btn btn-wa" id="wabtn" href="#" target="_blank" rel="noopener">Chat on WhatsApp</a>
+    <div style="height:10px"></div>
+    <button class="btn btn-ghost" id="againbtn" type="button">Recalculate</button>
+    <div style="height:10px"></div>
+    <a class="btn btn-ghost" id="waqbtn" href="#" target="_blank" rel="noopener">Need another estimate or have questions? Chat on WhatsApp</a>
+  </div>
+
+  <div class="badges">
+    <span>✓ 1-year warranty</span>
+    <span>✓ BBB Accredited</span>
+    <span>✓ Insured</span>
+  </div>
+  <p class="fine">Serving Central Florida. Estimated prices — the measurement visit is free and the final quote has no strings attached.</p>
+
+</div>
+
+<a id="wafloat" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="#ffffff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+/* TROQUE PELO NÚMERO REAL DO WHATSAPP (só dígitos, com DDI+DDD). Ex: "14075551234" */
+var WHATSAPP_NUMBER = "14074434160"; /* número do site lineflooringcontractor.com — confirmar */
+
+var PRICES = { complete: 4.29, install: 1.69, epoxy: 8.49, tile_labor: 3.99, tile_full: 8.49, tile_removal: 2.99 };
+var NAMES = {
+  complete: "Full package — LVP (material + installation)",
+  install: "Labor only — LVP installation",
+  epoxy: "Garage epoxy (flake)",
+  tile_labor: "Tile install 12x24 — labor only",
+  tile_full: "Porcelain tile 12x24 (labor + material)",
+  tile_removal: "Tile removal (dumpster + debris removal included)"
+};
+var WASTE = { complete: 0.08, epoxy: 0.10, tile_full: 0.10 }; /* cutting waste per service */
+var MAX_SQFT = 8000;
+function minSqft(){
+  if(svc === "epoxy") return 300;
+  if(svc === "tile_removal") return 800;
+  return 1000;
+}
+
+var svc = "complete";
+var sqftInput = document.getElementById("sqft");
+var range = document.getElementById("sqftrange");
+
+document.querySelectorAll(".svc").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll(".svc").forEach(function(x){ x.classList.remove("sel"); });
+    b.classList.add("sel");
+    svc = b.getAttribute("data-svc");
+    var mn = minSqft();
+    sqftInput.min = mn; range.min = mn;
+    document.getElementById("rmin").textContent = mn.toLocaleString("en-US");
+    document.getElementById("areahint").textContent =
+      "Total area for the flooring (" + mn.toLocaleString("en-US") + " – 8,000 sq ft).";
+    var cv = clampSqft(sqftInput.value);
+    sqftInput.value = cv; range.value = cv;
+  });
+});
+function clampSqft(v){
+  var mn = minSqft();
+  v = +v || mn;
+  return Math.min(MAX_SQFT, Math.max(mn, v));
+}
+sqftInput.addEventListener("input", function(){
+  var v = clampSqft(sqftInput.value);
+  range.value = v;
+});
+sqftInput.addEventListener("change", function(){ sqftInput.value = clampSqft(sqftInput.value); });
+range.addEventListener("input", function(){ sqftInput.value = range.value; });
+document.getElementById("addon_base").addEventListener("change", function(){
+  document.getElementById("base_opts").style.display = this.checked ? "block" : "none";
+});
+document.getElementById("addon_shoe").addEventListener("change", function(){
+  document.getElementById("shoe_opts").style.display = this.checked ? "block" : "none";
+});
+document.getElementById("addon_stairs").addEventListener("change", function(){
+  document.getElementById("stairs_opts").style.display = this.checked ? "block" : "none";
+});
+
+function fmt(n){
+  return "$" + n.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function isCentralFL(zip){
+  return /^(32[7-9]|347|338)\d{2}$/.test(zip.replace(/\D/g,"").slice(0,5));
+}
+
+document.getElementById("calcbtn").addEventListener("click", function(){
+  var name = document.getElementById("fname").value.trim();
+  var phone = document.getElementById("fphone").value.trim();
+  var zip = document.getElementById("fzip").value.replace(/\D/g,"").slice(0,5);
+  var err = document.getElementById("formerr");
+  if(!name || phone.replace(/\D/g,"").length < 7 || zip.length !== 5){
+    err.style.display = "block";
+    return;
+  }
+  err.style.display = "none";
+
+  var billed = clampSqft(sqftInput.value);
+  sqftInput.value = billed;
+
+  var price = PRICES[svc], rows = [], total;
+  rows.push(["Service", NAMES[svc]]);
+  rows.push(["Area entered", billed.toLocaleString("en-US") + " sq ft"]);
+  if(svc === "install" || svc === "tile_labor" || svc === "tile_removal"){
+    total = billed * price;
+  } else {
+    var wpct = Math.round((WASTE[svc] || 0) * 100);
+    var waste = Math.ceil(billed * (WASTE[svc] || 0));
+    rows.push(["Cutting waste (" + wpct + "%)", waste.toLocaleString("en-US") + " sq ft — included"]);
+    total = (billed + waste) * price;
+  }
+  var addonNames = [];
+  if(document.getElementById("addon_carpet").checked){
+    var carpetAmt = billed * 0.50;
+    rows.push(["Add-on: carpet removal", fmt(carpetAmt)]);
+    total += carpetAmt;
+    addonNames.push("Carpet removal");
+  }
+  if(document.getElementById("addon_base").checked){
+    var lf = Math.max(0, +document.getElementById("base_lf").value || 0);
+    if(lf > 0){
+      var btype = document.querySelector('input[name="base_type"]:checked').value;
+      var brate = btype === "full" ? 4.50 : 2.50;
+      var bamt = lf * brate;
+      rows.push(["Add-on: baseboards (" + (btype === "full" ? "labor + material" : "labor only") + ", " + lf + " lin ft)", fmt(bamt)]);
+      total += bamt;
+      addonNames.push("Baseboards");
+    }
+  }
+  if(document.getElementById("addon_shoe").checked){
+    var slf = Math.max(0, +document.getElementById("shoe_lf").value || 0);
+    if(slf > 0){
+      var stype = document.querySelector('input[name="shoe_type"]:checked').value;
+      var srate = stype === "full" ? 2.50 : 1.00;
+      var samt = slf * srate;
+      rows.push(["Add-on: shoe molding (" + (stype === "full" ? "labor + material" : "labor only") + ", " + slf + " lin ft)", fmt(samt)]);
+      total += samt;
+      addonNames.push("Shoe molding");
+    }
+  }
+  if(document.getElementById("addon_stairs").checked){
+    var nsteps = Math.min(18, Math.max(0, Math.round(+document.getElementById("stairs_n").value || 0)));
+    if(nsteps > 0){
+      rows.push(["Add-on: stairs (" + nsteps + " steps, materials + labor)", fmt(1600)]);
+      total += 1600;
+      addonNames.push("Stairs (" + nsteps + " steps)");
+    }
+  }
+  total = Math.round(total * 100) / 100;
+
+  document.getElementById("rservicename").textContent = NAMES[svc];
+  document.getElementById("rtotal").textContent = fmt(total);
+  document.getElementById("rbreakdown").innerHTML = rows.map(function(r){
+    return '<div class="row"><span>'+r[0]+'</span><span>'+r[1]+'</span></div>';
+  }).join("");
+  document.getElementById("rdelivery").textContent = isCentralFL(zip)
+    ? "✓ Free delivery in Central Florida (orders 1,000+ sq ft)."
+    : "• Outside Central Florida? Ask about delivery on WhatsApp.";
+
+  var msg = "Hi! I just got a quote on the Line Flooring website: " + NAMES[svc] +
+    ", " + billed.toLocaleString("en-US") + " sq ft = " + fmt(total) +
+    (addonNames.length ? " (incl. " + addonNames.join(", ").toLowerCase() + ")" : "") +
+    ". My name is " + name + " and my ZIP is " + zip +
+    ". I'd like to schedule the free measurement!";
+  document.getElementById("wabtn").href =
+    "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(msg);
+
+  /* Envia o lead para o e-mail (não bloqueia nem atrasa o resultado) */
+  try {
+    fetch("https://formsubmit.co/ajax/contact@lineflooringcontractor.com", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({
+        _subject: "Novo lead — calculadora do site",
+        _template: "table",
+        Nome: name,
+        WhatsApp: phone,
+        CEP: zip,
+        Email: document.getElementById("femail").value.trim() || "-",
+        "Serviço": NAMES[svc],
+        "Área (sq ft)": billed,
+        "Orçamento estimado": fmt(total),
+        "Adicionais": addonNames.length ? addonNames.join(", ") : "-"
+      })
+    }).catch(function(){});
+  } catch(e){}
+
+  document.getElementById("step1").style.display = "none";
+  document.getElementById("step2").style.display = "none";
+  document.getElementById("step3").style.display = "none";
+  document.getElementById("result").style.display = "block";
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+document.getElementById("againbtn").addEventListener("click", function(){
+  document.getElementById("step1").style.display = "block";
+  document.getElementById("step2").style.display = "block";
+  document.getElementById("step3").style.display = "block";
+  document.getElementById("result").style.display = "none";
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+/* Botão de dúvidas / outro orçamento (mensagem genérica) */
+document.getElementById("waqbtn").href = "https://wa.me/" + WHATSAPP_NUMBER +
+  "?text=" + encodeURIComponent("Hi! I'd like an estimate for another project or have a question.");
+document.getElementById("watopbtn").href = "https://wa.me/" + WHATSAPP_NUMBER +
+  "?text=" + encodeURIComponent("Hi! I'd like a quote for a service that's not listed on the calculator.");
+document.getElementById("wafloat").href = "https://wa.me/" + WHATSAPP_NUMBER +
+  "?text=" + encodeURIComponent("Hi! I have a question about a flooring project.");
+</script>
+</body>
+</html>
